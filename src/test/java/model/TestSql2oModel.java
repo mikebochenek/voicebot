@@ -16,7 +16,7 @@ import util.DataLoader;
 public class TestSql2oModel {
 
 	final String testemail = "mh+sample@doodle.com";
-	
+/*	
 	private Sql2oModel model;
 	@Before
 	public void setUp() throws Exception {
@@ -60,5 +60,5 @@ public class TestSql2oModel {
 			System.out.println(p);
 		}
 	}
-	
+*/	
 }
