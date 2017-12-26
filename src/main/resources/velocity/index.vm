@@ -1,0 +1,66 @@
+<!doctype html>
+<html ng-app="MyApp">
+  <head>
+    <title>Doodle Polls Demo</title>
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.4/angular.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+
+	<body ng-app="MyApp">
+	  <div class="container" ng-controller="PollsCtrl">
+       <h2>Search Polls</h2>
+       
+     <div class="row">
+	  <div class="col-sm-6">
+
+       <div class="col-4 input-group">
+         <span class="input-group-addon" id="basic-addon3">Author</span>
+         <input type="text" class="form-control" id="email" size="40" 
+                ng-model="email" ng-change="init()" value="mh+sample@doodle.com" placeholder="mh+sample@doodle.com"
+                aria-describedby="basic-addon3">
+       </div>       
+       <div class="col-4 input-group">
+         <span class="input-group-addon" id="basic-addon2">Keyword</span>
+         <input type="text" class="form-control" id="keyword" size="40" 
+                ng-model="keyword" ng-change="init()" value="badminton" placeholder="badminton"
+                aria-describedby="basic-addon3">
+       </div>       
+       <div class="col-4 input-group">
+         <span class="input-group-addon" id="basic-addon1">Creation Date</span>
+         <select class="form-control span4" ng-model="preset" ng-change="init()">
+            <option selected value="">All</option>
+            <option value="today">Created today</option>
+            <option value="this_month">Created this month</option>
+            <option value="this_year">Created this year</option>
+         </select>
+       </div>
+       <small>Search is limited to first 100 results (easier than pagination..)</small>       
+      </div>
+     </div>
+
+       <table class="table table-striped">
+         <thead>
+           <tr>
+             <th>Title</th>
+             <th>Description</th>
+             <th>Create Date</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr ng-repeat="post in posts">
+  		     <td>{{post.title}}</td>
+  		     <td>{{post.description}}</td>
+  		     <td>{{post.initiated | date:'mediumDate'}}</td>
+  	       </tr>
+  	     </tbody>
+  	   </table>
+	  </div>
+	</body
+    
+  </body>
+</html>
