@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-speech</artifactId>
-			<version>0.17.1-alpha</version>
+			<version>0.32.0-alpha</version>
 		</dependency>
 		<dependency>
 			<groupId>com.twilio.sdk</groupId>
