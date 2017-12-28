@@ -1,18 +1,40 @@
      
-CREATE DATABASE doodle;
-CREATE USER 'doodleuser'@'localhost' IDENTIFIED BY 'dood78s';
-GRANT ALL PRIVILEGES ON doodle.* TO 'doodleuser'@'localhost';
+CREATE DATABASE voicebot;
+CREATE USER 'voiceuser'@'localhost' IDENTIFIED BY 'tuzysvoice';
+GRANT ALL PRIVILEGES ON voicebot.* TO 'voiceuser'@'localhost';
 FLUSH PRIVILEGES;
 
+
 /* for testing init, might be useful to all tables: 
-   drop table polls; 
-   drop table locations;
-   drop table options;
-   drop table participants;
-   drop table initiators; 
-   drop table poll_initiators; 
+   drop table users; 
    drop table poll_participants;
    */
+
+create table users (
+  id integer not null AUTO_INCREMENT,
+  auth_provider_id varchar(255),
+  createdate timestamp,
+  email varchar(255),
+  password varchar(255),
+  user_type integer,
+  username varchar(255),
+  primary key (id),
+  fullname VARCHAR(65),
+  misc VARCHAR(8192)
+);
+
+create table recordings (
+  id integer not null AUTO_INCREMENT,
+  filename varchar(255),
+  url varchar(255),
+  createdate timestamp,
+  status integer,
+  parsedtext varchar(8192),
+  primary key (id),
+  misc VARCHAR(8192)
+);
+
+
 
 create table IF NOT EXISTS polls (
   uuid INT NOT NULL AUTO_INCREMENT,
