@@ -17,7 +17,8 @@ create table users (
   email varchar(255),
   password varchar(255),
   user_type integer,
-  username varchar(255),
+  username varchar(55),
+  phone varchar(55),
   primary key (id),
   fullname VARCHAR(65),
   misc VARCHAR(8192)
@@ -29,6 +30,8 @@ create table recordings (
   url varchar(255),
   createdate timestamp,
   status integer,
+  conversation integer,
+  phone varchar(55),
   parsedtext varchar(8192),
   primary key (id),
   misc VARCHAR(8192)
