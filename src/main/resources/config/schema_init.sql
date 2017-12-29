@@ -7,16 +7,16 @@ FLUSH PRIVILEGES;
 
 /* for testing init, might be useful to all tables: 
    drop table users; 
-   drop table poll_participants;
+   drop table recordings;
    */
 
 create table users (
   id integer not null AUTO_INCREMENT,
-  auth_provider_id varchar(255),
+  authprovider varchar(255),
   createdate timestamp,
   email varchar(255),
   password varchar(255),
-  user_type integer,
+  usertype integer,
   username varchar(55),
   phone varchar(55),
   primary key (id),
