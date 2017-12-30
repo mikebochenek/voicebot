@@ -1,0 +1,28 @@
+<configuration debug="true">
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>logs/application.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/application-log-%d{yyyyMMdd}-%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+          <maxFileSize>5MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+    <encoder>
+       <pattern>%d line:%L %logger{15} - %message%n%xException</pattern>
+       <immediateFlush>true</immediateFlush>
+    </encoder>
+  </appender>
+  
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d line:%L %logger{15} - %message%n%xException</pattern>
+    </encoder>
+  </appender>
+
+
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+  </root>
+  
+</configuration>
