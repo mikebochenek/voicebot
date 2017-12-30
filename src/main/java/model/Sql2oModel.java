@@ -1,5 +1,6 @@
 package model;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Sql2oModel {
     private static Sql2o sql2o;
     private static Sql2oModel instance;
 
+    
     public Sql2oModel(Sql2o s) {
         sql2o = s;
         instance = this;
@@ -25,7 +27,30 @@ public class Sql2oModel {
     public static Sql2oModel getInstance() {
         return instance;
     }
+    
+    public List<Recordings> getRecordings() {
+        try (Connection conn = sql2o.open()) {
+            return conn.createQuery("select * from recordings ")
+            		.executeAndFetch(Recordings.class);
+        }
+    }
 
+    public long createRecording(Recordings r) {
+        try (Connection con = sql2o.open()) {
+        	Connection executeUpdate = con.createQuery("insert into recordings(filename, url, status, conversation, phone, parsedtext, misc) "
+            		+ "values (:filename, :url, :status, :conversation, :phone, :parsedtext, :misc)")
+                    .addParameter("filename", r.filename)
+                    .addParameter("url", r.url)
+                    .addParameter("status", r.status)
+                    .addParameter("conversation", r.conversation)
+                    .addParameter("phone", r.phone)
+                    .addParameter("parsedtext", r.parsedtext)
+                    .addParameter("misc", r.misc)
+                    .executeUpdate();
+        	return ((BigInteger) executeUpdate.getKey()).longValue();
+        }
+    }
+    
     public List<Participant> getParticipant(long id) {
         try (Connection conn = sql2o.open()) {
             return conn.createQuery("select uuid, id, name, preferences from participants where id = :id ")

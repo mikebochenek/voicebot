@@ -11,6 +11,7 @@ import java.util.*;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.sql2o.Sql2o;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,7 +39,11 @@ public class Application {
         }
 
         loadPropertiesFromFile(args.length > 1 ? args[1] : "config.properties");
-    	
+        initDBConnection();
+        
+        Sql2oModel.getInstance().createRecording(new Recordings());
+        logger.info("recordings size: " + Sql2oModel.getInstance().getRecordings().size());
+        
 		if (args.length == 1) {
 			DataLoader.main(args); // parse and import filename
 		}
@@ -97,4 +102,9 @@ public class Application {
         }
     }
     
+	public static void initDBConnection() {
+        final String jdbc = System.getProperty("jdbc.url", "jdbc:mysql://localhost:3306/doodle?useUnicode=true&characterEncoding=utf8"); //TODO should come from config file
+        Sql2o sql2o = new Sql2o(jdbc, System.getProperty("jdbc.username", "doodleuser"), System.getProperty("jdbc.password", "dood78s")); 
+        Sql2oModel model = new Sql2oModel(sql2o); // http://www.sql2o.org/docs/configuration/
+	}
 }
