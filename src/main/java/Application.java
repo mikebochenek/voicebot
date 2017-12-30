@@ -41,9 +41,12 @@ public class Application {
         loadPropertiesFromFile(args.length > 1 ? args[1] : "config.properties");
         initDBConnection();
         
-        Sql2oModel.getInstance().createRecording(new Recording());
+        //Sql2oModel.getInstance().createRecording(new Recording());
         logger.info("recordings size: " + Sql2oModel.getInstance().getRecordings().size());
-        
+
+        //Sql2oModel.getInstance().createUser(new User());
+        logger.info("users size: " + Sql2oModel.getInstance().getUsers().size());
+
 		if (args.length == 1) {
 			DataLoader.main(args); // parse and import filename
 		}

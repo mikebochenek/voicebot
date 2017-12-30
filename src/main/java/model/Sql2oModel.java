@@ -51,6 +51,31 @@ public class Sql2oModel {
         }
     }
     
+    public List<User> getUsers() {
+        try (Connection conn = sql2o.open()) {
+            return conn.createQuery("select * from users ")
+            		.executeAndFetch(User.class);
+        }
+    }
+    
+    public long createUser(User u) {
+        try (Connection con = sql2o.open()) {
+        	Connection executeUpdate = con.createQuery("insert into users(authprovider, email, password, usertype, username, phone, fullname, misc) "
+            		+ "values (:authprovider, :email, :password, :password, :username, :phone, :fullname, :misc)")
+                    .addParameter("authprovider", u.authprovider)
+                    .addParameter("email", u.email)
+                    .addParameter("password", u.password)
+                    .addParameter("username", u.username)
+                    .addParameter("phone", u.phone)
+                    .addParameter("fullname", u.fullname)
+                    .addParameter("misc", u.misc)
+                    .executeUpdate();
+        	return ((BigInteger) executeUpdate.getKey()).longValue();
+        }
+    }
+
+    
+    
     public List<Participant> getParticipant(long id) {
         try (Connection conn = sql2o.open()) {
             return conn.createQuery("select uuid, id, name, preferences from participants where id = :id ")
