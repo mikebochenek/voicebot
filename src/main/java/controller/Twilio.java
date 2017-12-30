@@ -7,6 +7,9 @@ import com.twilio.twiml.Say;
 import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.Say.Voice;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -14,7 +17,9 @@ import spark.Route;
 public class Twilio {
 	static int timeoutSeconds = 3;
 	static String base = "http://www.resebot.com";
-	
+
+    public static Logger logger = LoggerFactory.getLogger(Twilio.class);
+
     public static String createFirstPrompt() {
         Say say = new Say.Builder("Hello World, please leave a message.").voice(Voice.ALICE).build();
         Record record = new Record.Builder().action(base + "/voice/record").playBeep(false).timeout(timeoutSeconds).build();
@@ -23,7 +28,7 @@ public class Twilio {
 
 		try {
 			String xml = response.toXml();
-			System.out.println(xml);
+			logger.info(xml);
 			return xml;
 		} catch (TwiMLException e) {
 			e.printStackTrace();
@@ -40,13 +45,13 @@ public class Twilio {
         if (url != null && url.length() > 0 && url.startsWith("http")) {
             util.FileDownload.download(url, "/tmp/" + System.currentTimeMillis());
         }
-        System.out.println("url: " + url + "  from: " + from);
+        logger.info("url: " + url + "  from: " + from);
 		
 		VoiceResponse vresponse = new VoiceResponse.Builder().say(say).build();
 
 		try {
 			String xml = vresponse.toXml();
-			System.out.println(xml);
+			logger.info(xml);
 			return xml;
 		} catch (TwiMLException e) {
 			e.printStackTrace();
