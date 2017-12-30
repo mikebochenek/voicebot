@@ -9,10 +9,6 @@ import model.Sql2oModel;
 import org.junit.Before;
 import org.junit.Test;
 
-import pojo.Poll;
-import util.CreationDateHelper;
-import util.DataLoader;
-
 public class TestSql2oModel {
 
 	final String testemail = "mh+sample@doodle.com";
