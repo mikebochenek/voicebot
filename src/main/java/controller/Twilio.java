@@ -8,9 +8,9 @@ import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.Say.Voice;
 
 public class Twilio {
-	int timeoutSeconds = 3;
+	static int timeoutSeconds = 3;
 	
-    public String createFirstPrompt() {
+    public static String createFirstPrompt() {
         Say say = new Say.Builder("Hello World").voice(Voice.ALICE).build();
         Play play = new Play.Builder("https://api.twilio.com/Cowbell.mp3").build();
         Record record = new Record.Builder().action("url").playBeep(false).timeout(timeoutSeconds).build();

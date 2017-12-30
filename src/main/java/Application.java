@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.sql2o.Sql2o;
 
+import controller.Twilio;
 import static spark.Spark.*;
 
 /**
@@ -46,10 +47,16 @@ public class Application {
         port(9989);
 
         get("/", (req, res) -> renderTemplate("velocity/index.vm", new HashMap<>(), req));
+        get("/voice/intro", (req, res) -> renderXML(req, res, Twilio.createFirstPrompt()));
     }
     
     private static String renderTemplate(String template, Map model, Request req) {
         return new VelocityTemplateEngine().render(new ModelAndView(model, template));
+    }
+    
+    private static String renderXML(Request req, Response res, String s) {
+        res.type("text/xml"/*; charset=utf-8*/);
+        return s;
     }
 
     private static String getCurrentVMHeapState() {
