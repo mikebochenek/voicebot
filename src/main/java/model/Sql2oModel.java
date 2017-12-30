@@ -28,14 +28,14 @@ public class Sql2oModel {
         return instance;
     }
     
-    public List<Recordings> getRecordings() {
+    public List<Recording> getRecordings() {
         try (Connection conn = sql2o.open()) {
             return conn.createQuery("select * from recordings ")
-            		.executeAndFetch(Recordings.class);
+            		.executeAndFetch(Recording.class);
         }
     }
 
-    public long createRecording(Recordings r) {
+    public long createRecording(Recording r) {
         try (Connection con = sql2o.open()) {
         	Connection executeUpdate = con.createQuery("insert into recordings(filename, url, status, conversation, phone, parsedtext, misc) "
             		+ "values (:filename, :url, :status, :conversation, :phone, :parsedtext, :misc)")

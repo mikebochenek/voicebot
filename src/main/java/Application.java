@@ -41,7 +41,7 @@ public class Application {
         loadPropertiesFromFile(args.length > 1 ? args[1] : "config.properties");
         initDBConnection();
         
-        Sql2oModel.getInstance().createRecording(new Recordings());
+        Sql2oModel.getInstance().createRecording(new Recording());
         logger.info("recordings size: " + Sql2oModel.getInstance().getRecordings().size());
         
 		if (args.length == 1) {
