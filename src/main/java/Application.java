@@ -48,7 +48,7 @@ public class Application {
 
         get("/", (req, res) -> renderTemplate("velocity/index.vm", new HashMap<>(), req));
         get("/voice/intro", (req, res) -> renderXML(req, res, Twilio.createFirstPrompt()));
-        get("/voice/record", (req, res) -> renderXML(req, res, Twilio.handleRecord(req, res)));
+        post("/voice/record", (req, res) -> renderXML(req, res, Twilio.handleRecord(req, res)));
     }
     
     private static String renderTemplate(String template, Map model, Request req) {
