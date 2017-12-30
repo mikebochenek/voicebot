@@ -5,6 +5,7 @@ GRANT ALL PRIVILEGES ON voicebot.* TO 'voiceuser'@'localhost';
 FLUSH PRIVILEGES;
 
 
+
 /* for testing init, might be useful to all tables: 
    drop table users; 
    drop table recordings;
