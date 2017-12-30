@@ -7,23 +7,50 @@ import com.twilio.twiml.Say;
 import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.Say.Voice;
 
+import spark.Request;
+import spark.Response;
+import spark.Route;
+
 public class Twilio {
 	static int timeoutSeconds = 3;
+	static String base = "http://www.resebot.com";
 	
     public static String createFirstPrompt() {
-        Say say = new Say.Builder("Hello World").voice(Voice.ALICE).build();
-        Play play = new Play.Builder("https://api.twilio.com/Cowbell.mp3").build();
-        Record record = new Record.Builder().action("url").playBeep(false).timeout(timeoutSeconds).build();
+        Say say = new Say.Builder("Hello World, please leave a message.").voice(Voice.ALICE).build();
+        Record record = new Record.Builder().action(base + "/voice/record").playBeep(false).timeout(timeoutSeconds).build();
         
-        VoiceResponse response = new VoiceResponse.Builder().say(say).play(play).record(record).build();
+        VoiceResponse response = new VoiceResponse.Builder().say(say).record(record).build();
 
-        try {
-        	String xml = response.toXml();
-            System.out.println(xml);
-            return xml;
-        } catch (TwiMLException e) {
-            e.printStackTrace();
-            return "";
-        }
+		try {
+			String xml = response.toXml();
+			System.out.println(xml);
+			return xml;
+		} catch (TwiMLException e) {
+			e.printStackTrace();
+			return "";
+		}
     }
+	
+    public static String handleRecord(Request request, Response response) {
+		Say say = new Say.Builder("OK, done recording").voice(Voice.ALICE).build();
+
+        String url = request.queryParams("RecordingUrl");
+        String from = request.queryParams("from");
+        
+        if (url != null && url.length() > 0 && url.startsWith("http")) {
+            util.FileDownload.download(url, "/tmp/" + System.currentTimeMillis());
+        }
+        System.out.println("url: " + url + "  from: " + from);
+		
+		VoiceResponse vresponse = new VoiceResponse.Builder().say(say).build();
+
+		try {
+			String xml = vresponse.toXml();
+			System.out.println(xml);
+			return xml;
+		} catch (TwiMLException e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
 }
