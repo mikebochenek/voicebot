@@ -1,6 +1,5 @@
 package controller;
 
-import com.twilio.twiml.Play;
 import com.twilio.twiml.Record;
 import com.twilio.twiml.VoiceResponse;
 import com.twilio.twiml.Say;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 
 import spark.Request;
 import spark.Response;
-import spark.Route;
 
 public class Twilio {
 	static int timeoutSeconds = 3;
