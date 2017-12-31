@@ -34,7 +34,7 @@ public class QuickstartSample {
 
 		// Builds the sync recognize request
 		RecognitionConfig config = RecognitionConfig.newBuilder()
-				.setEncoding(AudioEncoding.LINEAR16)
+				//.setEncoding(AudioEncoding.LINEAR16)
 				.setSampleRateHertz(16000)
 				.setLanguageCode("en-US")
 				.build();
