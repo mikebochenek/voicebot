@@ -7,6 +7,9 @@ import com.twilio.twiml.Say;
 import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.Say.Voice;
 
+import model.Recording;
+import model.Sql2oModel;
+
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
@@ -44,6 +47,10 @@ public class Twilio {
         
         if (url != null && url.length() > 0 && url.startsWith("http")) {
             util.FileDownload.download(url, "/tmp/" + System.currentTimeMillis());
+            
+            Recording r = new Recording("", url, from);
+            long recordingID = Sql2oModel.getInstance().createRecording(r);
+            logger.info("recording created: " + recordingID + " --> " + r.toString());
         }
         logger.info("url: " + url + "  from: " + from);
 		
