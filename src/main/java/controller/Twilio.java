@@ -8,12 +8,14 @@ import com.twilio.twiml.Say.Voice;
 
 import model.Recording;
 import model.Sql2oModel;
+import model.speech.QuickstartSample;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import spark.Request;
 import spark.Response;
+import util.FileDownload;
 
 public class Twilio {
 	static int timeoutSeconds = 3;
@@ -42,15 +44,24 @@ public class Twilio {
 
         String url = request.queryParams("RecordingUrl");
         String from = request.queryParams("from");
+        logger.info("url: " + url + "  from: " + from);
         
         if (url != null && url.length() > 0 && url.startsWith("http")) {
-            util.FileDownload.download(url, "/tmp/" + System.currentTimeMillis());
+        	String filename = FileDownload.generateWAVFilename();
+            util.FileDownload.download(url, filename);
             
-            Recording r = new Recording("", url, from);
+            Recording r = new Recording(filename, url, from);
             long recordingID = Sql2oModel.getInstance().createRecording(r);
             logger.info("recording created: " + recordingID + " --> " + r.toString());
+            
+            try {
+            	long startTS = System.currentTimeMillis();
+            	String transcript = QuickstartSample.process(filename);
+            	logger.info("Quickstart transcript: " + transcript + "    " + (System.currentTimeMillis()-startTS) + "ms");
+            } catch (Exception e) {
+            	logger.error("failed to run google speech recognition", e);
+            }
         }
-        logger.info("url: " + url + "  from: " + from);
 		
 		VoiceResponse vresponse = new VoiceResponse.Builder().say(say).build();
 

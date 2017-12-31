@@ -24,4 +24,13 @@ public class FileDownload {
 			e.printStackTrace();
 		}
 	}
+	
+	public static String generateWAVFilename() {
+		String path = System.getProperty("data.local.path", "/tmp");
+		if (!path.endsWith("/")) {
+			path += "/";
+		}
+		path += "speech-" + System.currentTimeMillis() + ".wav";
+		return path;
+	}
 }
