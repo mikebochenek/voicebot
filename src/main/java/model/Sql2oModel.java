@@ -40,7 +40,8 @@ public class Sql2oModel {
                     .addParameter("parsedtext", r.parsedtext)
                     .addParameter("misc", r.misc)
                     .executeUpdate();
-        	return ((BigInteger) executeUpdate.getKey()).longValue();
+        	Object key = executeUpdate.getKey();
+        	return (key instanceof BigInteger ? ((BigInteger) key).longValue() : (Long) key);
         }
     }
     
@@ -63,7 +64,8 @@ public class Sql2oModel {
                     .addParameter("fullname", u.fullname)
                     .addParameter("misc", u.misc)
                     .executeUpdate();
-        	return ((BigInteger) executeUpdate.getKey()).longValue();
+        	Object key = executeUpdate.getKey();
+        	return (key instanceof BigInteger ? ((BigInteger) key).longValue() : (Long) key);
         }
     }
 }
