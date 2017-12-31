@@ -20,39 +20,37 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class QuickstartSample {
-public static void main(String... args) throws Exception {
-  // Instantiates a client
-  SpeechClient speech = SpeechClient.create();
+	public static void main(String... args) throws Exception {
+		// Instantiates a client
+		SpeechClient speech = SpeechClient.create();
 
-  // The path to the audio file to transcribe
-  String fileName = "./resources/audio.raw";
+		// The path to the audio file to transcribe
+		String fileName = "./resources/audio.raw";
 
-  // Reads the audio file into memory
-  Path path = Paths.get(fileName);
-  byte[] data = Files.readAllBytes(path);
-  ByteString audioBytes = ByteString.copyFrom(data);
+		// Reads the audio file into memory
+		Path path = Paths.get(fileName);
+		byte[] data = Files.readAllBytes(path);
+		ByteString audioBytes = ByteString.copyFrom(data);
 
-  // Builds the sync recognize request
-  RecognitionConfig config = RecognitionConfig.newBuilder()
-      .setEncoding(AudioEncoding.LINEAR16)
-      .setSampleRateHertz(16000)
-      .setLanguageCode("en-US")
-      .build();
-  RecognitionAudio audio = RecognitionAudio.newBuilder()
-      .setContent(audioBytes)
-      .build();
+		// Builds the sync recognize request
+		RecognitionConfig config = RecognitionConfig.newBuilder()
+				.setEncoding(AudioEncoding.LINEAR16)
+				.setSampleRateHertz(16000)
+				.setLanguageCode("en-US")
+				.build();
+		RecognitionAudio audio = RecognitionAudio.newBuilder().setContent(audioBytes).build();
 
-  // Performs speech recognition on the audio file
-  RecognizeResponse response = speech.recognize(config, audio);
-  List<SpeechRecognitionResult> results = response.getResultsList();
+		// Performs speech recognition on the audio file
+		RecognizeResponse response = speech.recognize(config, audio);
+		List<SpeechRecognitionResult> results = response.getResultsList();
 
-  for (SpeechRecognitionResult result: results) {
-    // There can be several alternative transcripts for a given chunk of speech. Just use the
-    // first (most likely) one here.
-    SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-    System.out.printf("Transcription: %s%n", alternative.getTranscript());
-  }
-  speech.close();
+		for (SpeechRecognitionResult result : results) {
+			// There can be several alternative transcripts for a given chunk of
+			// speech. Just use the first (most likely) one here.
+			SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
+			System.out.printf("Transcription: %s%n", alternative.getTranscript());
+		}
+		speech.close();
+	}
 }
-}
-//[END speech_quickstart]
+// [END speech_quickstart]
