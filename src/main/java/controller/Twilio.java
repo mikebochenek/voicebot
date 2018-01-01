@@ -47,20 +47,27 @@ public class Twilio {
         logger.info("url: " + url + "  from: " + from);
         
         if (url != null && url.length() > 0 && url.startsWith("http")) {
-        	String filename = FileDownload.generateWAVFilename();
+        		try {
+        			Thread.sleep(2000);
+    			} catch (InterruptedException ie) {
+    				logger.error("failed to wait for a few seconds", ie);
+    				Thread.currentThread().interrupt();
+        		}
+
+        		String filename = FileDownload.generateWAVFilename();
             util.FileDownload.download(url, filename);
             
             Recording r = new Recording(filename, url, from);
             long recordingID = Sql2oModel.getInstance().createRecording(r);
             logger.info("recording created: " + recordingID + " --> " + r.toString());
             
-            try {
-            	long startTS = System.currentTimeMillis();
-            	String transcript = QuickstartSample.process(filename);
-            	logger.info("Quickstart transcript: " + transcript + "    " + (System.currentTimeMillis()-startTS) + "ms");
-            } catch (Exception e) {
-            	logger.error("failed to run google speech recognition", e);
-            }
+			try {
+				long startTS = System.currentTimeMillis();
+				String transcript = QuickstartSample.process(filename);
+				logger.info("Quickstart transcript: " + transcript + "    " + (System.currentTimeMillis() - startTS) + "ms");
+			} catch (Exception e) {
+				logger.error("failed to run google speech recognition", e);
+			}
         }
 		
 		VoiceResponse vresponse = new VoiceResponse.Builder().say(say).build();
