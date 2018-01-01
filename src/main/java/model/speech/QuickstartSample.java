@@ -58,7 +58,7 @@ public class QuickstartSample {
 			// There can be several alternative transcripts for a given chunk of
 			// speech. Just use the first (most likely) one here.
 			SpeechRecognitionAlternative alternative = result.getAlternativesList().get(0);
-			logger.info("Transcription: %s%n", alternative.getTranscript());
+			logger.info("Transcription: " + alternative.getTranscript());
 			output += alternative.getTranscript();
 		}
 		speech.close();
