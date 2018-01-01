@@ -1,0 +1,10 @@
+2018-01-01 22:18:56,914 line:170 s.s.StaticFilesConfiguration - StaticResourceHandler configured with folder = /public
+2018-01-01 22:18:57,883 line:40 Application - recordings size: 3
+2018-01-01 22:18:57,935 line:47 Application - users size: 1
+2018-01-01 22:18:57,938 line:211 spark.Spark - Static file location has already been set
+2018-01-01 22:18:58,008 line:186 o.e.j.util.log - Logging initialized @2562ms
+2018-01-01 22:18:58,108 line:125 s.e.j.EmbeddedJettyServer - == Spark has ignited ...
+2018-01-01 22:18:58,109 line:126 s.e.j.EmbeddedJettyServer - >> Listening on 0.0.0.0:9989
+2018-01-01 22:18:58,115 line:345 o.e.j.s.Server - jetty-9.3.6.v20151106
+2018-01-01 22:18:58,208 line:270 o.e.j.s.ServerConnector - Started ServerConnector@5032da95{HTTP/1.1,[http/1.1]}{0.0.0.0:9989}
+2018-01-01 22:18:58,210 line:397 o.e.j.s.Server - Started @2767ms

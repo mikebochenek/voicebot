@@ -11,6 +11,7 @@ import com.twilio.twiml.Say;
 import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.Say.Voice;
 
+import model.RecordingStatusCallback;
 import model.speech.Transcribe;
 
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,9 @@ public class Twilio {
     public static String handleRecord(Request request, Response response) {
 		Say say = new Say.Builder("OK, done recording").voice(Voice.ALICE).build();
         String url = request.queryParams("RecordingUrl");
-        String from = request.queryParams("from");
+        String from = request.queryParams("From");
         logger.info("url: " + url + "  from: " + from);
+        logger.info(extractCallbackParameters(request).toString());
         
         if (url != null && url.length() > 0 && url.startsWith("http")) {
         	Transcribe t = new Transcribe(url, from);
@@ -68,5 +70,11 @@ public class Twilio {
 			e.printStackTrace();
 			return "";
 		}
+	}
+	
+	private static RecordingStatusCallback extractCallbackParameters(Request req) {
+		return new RecordingStatusCallback(req.queryParams("RecordingSid"), req.queryParams("RecordingUrl"),
+				req.queryParams("CallSid"), req.queryParams("From"), req.queryParams("To"), req.queryParams("CallStatus"),
+				req.queryParams("ApiVersion"), req.queryParams("Direction"), req.queryParams("forwardedFrom"));
 	}
 }
