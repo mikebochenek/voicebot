@@ -1,5 +1,7 @@
 # Created by https://www.gitignore.io
 
+logs/
+
 .classpath
 .project
 .settings/**

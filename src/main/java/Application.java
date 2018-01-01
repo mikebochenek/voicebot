@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.sql2o.Sql2o;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import controller.Twilio;
 import static spark.Spark.*;
 
@@ -51,9 +54,22 @@ public class Application {
         port(9989);
 
         get("/", (req, res) -> renderTemplate("velocity/index.vm", new HashMap<>(), req));
+        get("/api/recordings", (req, res) -> renderRecordings(req, res));
         get("/voice/intro", (req, res) -> renderXML(req, res, Twilio.createFirstPrompt()));
         post("/voice/record", (req, res) -> renderXML(req, res, Twilio.handleRecord(req, res)));
     }
+    
+    private static String renderRecordings(Request req, Response res) {
+	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String email = req.queryParams("email");
+        String keyword = req.queryParams("keyword");
+        String preset = req.queryParams("preset");
+        logger.info("preset: " + preset + " email: " + email + " keyword: " + keyword);
+        List<Recording> recordings = Sql2oModel.getInstance().getRecordings(); //getPollsByInitiatorSearch(email, CreationDateHelper.convertPresetToTime(preset), keyword);
+        res.type("application/json; charset=utf-8");
+        return gson.toJson(recordings);
+    }
+
     
     private static String renderTemplate(String template, Map model, Request req) {
         return new VelocityTemplateEngine().render(new ModelAndView(model, template));
