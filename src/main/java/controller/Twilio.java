@@ -6,23 +6,20 @@ import com.twilio.twiml.Say;
 import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.Say.Voice;
 
-import model.Recording;
-import model.Sql2oModel;
-import model.speech.QuickstartSample;
+import model.speech.Transcribe;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import spark.Request;
 import spark.Response;
-import util.FileDownload;
 
 public class Twilio {
 	static int timeoutSeconds = 3;
 	static String base = "http://www.resebot.com";
 
     public static Logger logger = LoggerFactory.getLogger(Twilio.class);
-
+    
     public static String createFirstPrompt() {
         Say say = new Say.Builder("Hello World, please leave a message.").voice(Voice.ALICE).build();
         Record record = new Record.Builder().action(base + "/voice/record").playBeep(false).timeout(timeoutSeconds).build();
@@ -47,7 +44,8 @@ public class Twilio {
         logger.info("url: " + url + "  from: " + from);
         
         if (url != null && url.length() > 0 && url.startsWith("http")) {
-        	transcribeURL(url, from);
+        	Transcribe t = new Transcribe(url, from);
+        	t.transcribeURL();
         }
 		
 		VoiceResponse vresponse = new VoiceResponse.Builder().say(say).build();
@@ -61,28 +59,4 @@ public class Twilio {
 			return "";
 		}
 	}
-    
-    public static void transcribeURL(String url, String from) {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException ie) {
-			logger.error("failed to wait for a few seconds", ie);
-			Thread.currentThread().interrupt();
-		}
-
-		String filename = FileDownload.generateWAVFilename();
-		util.FileDownload.download(url, filename);
-
-		Recording r = new Recording(filename, url, from);
-		long recordingID = Sql2oModel.getInstance().createRecording(r);
-		logger.info("recording created: " + recordingID + " --> " + r.toString());
-
-		try {
-			long startTS = System.currentTimeMillis();
-			String transcript = QuickstartSample.process(filename);
-			logger.info("Quickstart transcript: " + transcript + "    " + (System.currentTimeMillis() - startTS) + "ms");
-		} catch (Exception e) {
-			logger.error("failed to run google speech recognition", e);
-		}
-    }
 }
