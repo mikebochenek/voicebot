@@ -44,6 +44,23 @@ public class Sql2oModel {
         	return (key instanceof BigInteger ? ((BigInteger) key).longValue() : (Long) key);
         }
     }
+
+    public void updateRecording(Recording r) {
+        try (Connection con = sql2o.open()) {
+        	con.createQuery("update recordings set filename = :filename, url = :url, status = :status, "
+        				+ "conversation = :conversation, phone = :phone, parsedtext = :parsedtext, misc = :misc "
+        				+ "where id = :id")
+                    .addParameter("filename", r.filename)
+                    .addParameter("url", r.url)
+                    .addParameter("status", r.status)
+                    .addParameter("conversation", r.conversation)
+                    .addParameter("phone", r.phone)
+                    .addParameter("parsedtext", r.parsedtext)
+                    .addParameter("misc", r.misc)
+                    .addParameter("id", r.id)
+                    .executeUpdate();
+        }
+    }
     
     public List<User> getUsers() {
         try (Connection conn = sql2o.open()) {

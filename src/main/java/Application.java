@@ -38,6 +38,10 @@ public class Application {
         
         //Sql2oModel.getInstance().createRecording(new Recording());
         logger.info("recordings size: " + Sql2oModel.getInstance().getRecordings().size());
+        //Recording r = Sql2oModel.getInstance().getRecordings().get(0);
+        //r.status = 1;
+        //r.parsedtext = "blah";
+        //Sql2oModel.getInstance().updateRecording(r);
 
         //Sql2oModel.getInstance().createUser(new User());
         logger.info("users size: " + Sql2oModel.getInstance().getUsers().size());

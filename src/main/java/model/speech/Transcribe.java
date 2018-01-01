@@ -28,6 +28,7 @@ public class Transcribe {
 		String filename = FileDownload.generateWAVFilename();
 		Recording r = new Recording(filename, url, from);
 		long recordingID = Sql2oModel.getInstance().createRecording(r);
+		r.id = (int)recordingID;
 		logger.info("recording created: " + recordingID + " --> " + r.toString());
 		
 		try {
@@ -41,12 +42,17 @@ public class Transcribe {
 
 		String transcript = "";
 		try {
-			long startTS = System.currentTimeMillis();
+ 			long startTS = System.currentTimeMillis();
 			transcript += QuickstartSample.process(filename);
 			logger.info("Quickstart transcript: " + transcript + "    " + (System.currentTimeMillis() - startTS) + "ms");
 		} catch (Exception e) {
 			logger.error("failed to run google speech recognition", e);
 		}
+		
+		r.status = 1;
+		r.parsedtext = transcript;
+		Sql2oModel.getInstance().updateRecording(r);
+		
 		return transcript;
     }
     
