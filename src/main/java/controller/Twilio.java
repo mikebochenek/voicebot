@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.concurrent.CompletableFuture;
+
 import com.twilio.twiml.Record;
 import com.twilio.twiml.VoiceResponse;
 import com.twilio.twiml.Say;
@@ -45,7 +47,9 @@ public class Twilio {
         
         if (url != null && url.length() > 0 && url.startsWith("http")) {
         	Transcribe t = new Transcribe(url, from);
-        	t.transcribeURL();
+        	final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+        		return t.transcribeURL(); //...long running... (from http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html)
+        	});
         }
 		
 		VoiceResponse vresponse = new VoiceResponse.Builder().say(say).build();

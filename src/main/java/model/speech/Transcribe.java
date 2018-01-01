@@ -24,7 +24,7 @@ public class Transcribe {
     }
 
     
-    public void transcribeURL() {
+    public String transcribeURL() {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException ie) {
@@ -39,13 +39,15 @@ public class Transcribe {
 		long recordingID = Sql2oModel.getInstance().createRecording(r);
 		logger.info("recording created: " + recordingID + " --> " + r.toString());
 
+		String transcript = "";
 		try {
 			long startTS = System.currentTimeMillis();
-			String transcript = QuickstartSample.process(filename);
+			transcript += QuickstartSample.process(filename);
 			logger.info("Quickstart transcript: " + transcript + "    " + (System.currentTimeMillis() - startTS) + "ms");
 		} catch (Exception e) {
 			logger.error("failed to run google speech recognition", e);
 		}
+		return transcript;
     }
     
 }
