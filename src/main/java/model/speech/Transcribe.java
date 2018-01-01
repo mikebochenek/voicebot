@@ -25,6 +25,11 @@ public class Transcribe {
 
     
     public String transcribeURL() {
+		String filename = FileDownload.generateWAVFilename();
+		Recording r = new Recording(filename, url, from);
+		long recordingID = Sql2oModel.getInstance().createRecording(r);
+		logger.info("recording created: " + recordingID + " --> " + r.toString());
+		
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException ie) {
@@ -32,12 +37,7 @@ public class Transcribe {
 			Thread.currentThread().interrupt();
 		}
 
-		String filename = FileDownload.generateWAVFilename();
 		util.FileDownload.download(url, filename);
-
-		Recording r = new Recording(filename, url, from);
-		long recordingID = Sql2oModel.getInstance().createRecording(r);
-		logger.info("recording created: " + recordingID + " --> " + r.toString());
 
 		String transcript = "";
 		try {
