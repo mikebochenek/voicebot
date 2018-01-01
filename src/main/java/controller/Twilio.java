@@ -1,5 +1,8 @@
 package controller;
 
+import static spark.Spark.get;
+import static spark.Spark.post;
+
 import java.util.concurrent.CompletableFuture;
 
 import com.twilio.twiml.Record;
@@ -21,26 +24,26 @@ public class Twilio {
 	static String base = "http://www.resebot.com";
 
     public static Logger logger = LoggerFactory.getLogger(Twilio.class);
-    
+
+    /**
+     * get("/voice/intro", (req, res) -> renderXML(req, res, Twilio.createFirstPrompt())); 
+     * @return
+     */
     public static String createFirstPrompt() {
         Say say = new Say.Builder("Hello World, please leave a message.").voice(Voice.ALICE).build();
         Record record = new Record.Builder().action(base + "/voice/record").playBeep(false).timeout(timeoutSeconds).build();
-        
         VoiceResponse response = new VoiceResponse.Builder().say(say).record(record).build();
-
-		try {
-			String xml = response.toXml();
-			logger.info(xml);
-			return xml;
-		} catch (TwiMLException e) {
-			e.printStackTrace();
-			return "";
-		}
+		return toXML(response);
     }
-	
+    
+    /**
+     * post("/voice/record", (req, res) -> renderXML(req, res, Twilio.handleRecord(req, res))); 
+     * @param request
+     * @param response
+     * @return
+     */
     public static String handleRecord(Request request, Response response) {
 		Say say = new Say.Builder("OK, done recording").voice(Voice.ALICE).build();
-
         String url = request.queryParams("RecordingUrl");
         String from = request.queryParams("from");
         logger.info("url: " + url + "  from: " + from);
@@ -53,9 +56,12 @@ public class Twilio {
         }
 		
 		VoiceResponse vresponse = new VoiceResponse.Builder().say(say).build();
+		return toXML(vresponse);
+	}
 
+	private static String toXML(VoiceResponse response) {
 		try {
-			String xml = vresponse.toXml();
+			String xml = response.toXml();
 			logger.info(xml);
 			return xml;
 		} catch (TwiMLException e) {
