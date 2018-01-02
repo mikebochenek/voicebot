@@ -14,7 +14,7 @@ public class TestTwilio {
 	@Test
 	public void testCreateFirstPrompt() {
 		Twilio t = new Twilio();
-		t.createFirstPrompt();
+		//t.createFirstPrompt(null);
 	}
 
 }
