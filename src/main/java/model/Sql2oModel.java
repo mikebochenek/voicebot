@@ -33,7 +33,7 @@ public class Sql2oModel {
      */
     public List<Recording> getRecordings(String phoneFrom, String phoneCalled) {
         try (Connection conn = sql2o.open()) {
-            return conn.createQuery("select * from recordings where createdate > (NOW() - INTERVAL 5 MINUTE) and phone = :phone and phonecalled = :phoneCalled ")
+            return conn.createQuery("select * from recordings where createdate > (NOW() - INTERVAL 5 MINUTE) and phone = :phone and phonecalled = :phonecalled ")
                     .addParameter("phone", phoneFrom)
                     .addParameter("phonecalled", phoneCalled)
             		.executeAndFetch(Recording.class);
