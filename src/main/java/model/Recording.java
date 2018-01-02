@@ -21,13 +21,15 @@ public class Recording {
 	public int status;
 	public int conversation;
 	public String phone;
+	public String phonecalled;
+	public String urlcalled;
 	public String parsedtext;
 	public String misc;
 	
 	@Override
 	public String toString() {
 		return "Recording [id=" + id + ", filename=" + filename + ", url=" + url + ", createdate=" + createdate
-				+ ", status=" + status + ", conversation=" + conversation + ", phone=" + phone + ", parsedtext="
-				+ parsedtext + ", misc=" + misc + "]";
+				+ ", status=" + status + ", conversation=" + conversation + ", phone=" + phone + ", phonecalled="
+				+ phonecalled + ", urlcalled=" + urlcalled + ", parsedtext=" + parsedtext + ", misc=" + misc + "]";
 	}
 }

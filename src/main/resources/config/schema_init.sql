@@ -1,9 +1,10 @@
-     
+
+/*     
 CREATE DATABASE voicebot;
 CREATE USER 'voiceuser'@'localhost' IDENTIFIED BY 'tuzysvoice';
 GRANT ALL PRIVILEGES ON voicebot.* TO 'voiceuser'@'localhost';
 FLUSH PRIVILEGES;
-
+*/
 
 
 /* for testing init, might be useful to all tables: 
@@ -11,7 +12,7 @@ FLUSH PRIVILEGES;
    drop table recordings;
    */
 
-create table users (
+create table IF NOT EXISTS users (
   id integer not null AUTO_INCREMENT,
   authprovider varchar(255),
   createdate timestamp,
@@ -25,7 +26,7 @@ create table users (
   misc VARCHAR(8192)
 );
 
-create table recordings (
+create table IF NOT EXISTS recordings (
   id integer not null AUTO_INCREMENT,
   filename varchar(255),
   url varchar(255),
@@ -33,11 +34,24 @@ create table recordings (
   status integer,
   conversation integer,
   phone varchar(55),
+  phonecalled varchar(55),
+  urlcalled varchar(255),
   parsedtext varchar(8192),
   primary key (id),
   misc VARCHAR(8192)
 );
 
+
+create table IF NOT EXISTS prompts (
+  id INT NOT NULL AUTO_INCREMENT,
+  createdate timestamp,
+  status integer,
+  phone varchar(55),
+  ptext varchar(8192),
+  actionurl varchar(255),
+  url varchar(255),
+  primary key (id)
+);
 
 
 create table IF NOT EXISTS polls (

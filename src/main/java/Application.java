@@ -38,17 +38,8 @@ public class Application {
 
         loadPropertiesFromFile(args.length > 1 ? args[1] : "config.properties");
         initDBConnection();
+        testDBCode();
         
-        //Sql2oModel.getInstance().createRecording(new Recording());
-        logger.info("recordings size: " + Sql2oModel.getInstance().getRecordings().size());
-        //Recording r = Sql2oModel.getInstance().getRecordings().get(0);
-        //r.status = 1;
-        //r.parsedtext = "blah";
-        //Sql2oModel.getInstance().updateRecording(r);
-
-        //Sql2oModel.getInstance().createUser(new User());
-        logger.info("users size: " + Sql2oModel.getInstance().getUsers().size());
-
         exception(Exception.class, (e, req, res) -> e.printStackTrace()); // print all exceptions
         staticFiles.location("/public");
         port(9989);
@@ -109,5 +100,17 @@ public class Application {
         final String jdbc = System.getProperty("jdbc.url", "jdbc:mysql://localhost:3306/doodle?useUnicode=true&characterEncoding=utf8"); //TODO should come from config file
         Sql2o sql2o = new Sql2o(jdbc, System.getProperty("jdbc.username", "doodleuser"), System.getProperty("jdbc.password", "dood78s")); 
         Sql2oModel model = new Sql2oModel(sql2o); // http://www.sql2o.org/docs/configuration/
+	}
+	
+	private static void testDBCode() {
+        //Sql2oModel.getInstance().createRecording(new Recording());
+        logger.info("recordings size: " + Sql2oModel.getInstance().getRecordings().size());
+        //Recording r = Sql2oModel.getInstance().getRecordings().get(0);
+        //r.status = 1;
+        //r.parsedtext = "blah";
+        //Sql2oModel.getInstance().updateRecording(r);
+
+        //Sql2oModel.getInstance().createUser(new User());
+        logger.info("users size: " + Sql2oModel.getInstance().getUsers().size());
 	}
 }
