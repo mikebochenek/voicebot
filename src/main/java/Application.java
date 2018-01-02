@@ -49,7 +49,8 @@ public class Application {
         get("/voice/intro", (req, res) -> renderXML(req, res, Twilio.createFirstPrompt(req)));
         post("/voice/record", (req, res) -> renderXML(req, res, Twilio.handleRecord(req)));
         post(Twilio.guestsAction, (req, res) -> renderXML(req, res, Twilio.handleGuests(req)));
-        post(Twilio.confirmationAction, (req, res) -> renderXML(req, res, Twilio.handleProcessingWait(req)));
+        post(Twilio.processingWaitAction, (req, res) -> renderXML(req, res, Twilio.handleProcessingWait(req)));
+        post(Twilio.confirmationAction, (req, res) -> renderXML(req, res, Twilio.handleConfirmation(req)));
     }
     
     private static String renderRecordings(Request req, Response res) {

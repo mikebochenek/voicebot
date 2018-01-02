@@ -56,10 +56,19 @@ create table IF NOT EXISTS prompts (
 
 
 INSERT INTO `voicebot`.`prompts` (`phone`, `ptext`, `actionurl`)
-VALUES ('+12262429755', 'Hello World, please leave a message.', '/voice/intro');
+VALUES ('+12262429755', 'Hello there cowboy, please leave a message to make a reservation.', '/voice/intro');
 
 INSERT INTO `voicebot`.`prompts` (`phone`, `ptext`, `actionurl`)
-VALUES ('+12262429755', 'OK, done recording', '/voice/record');
+VALUES ('+12262429755', 'And how many people in your party?', '/voice/record');
+
+INSERT INTO `voicebot`.`prompts` (`phone`, `ptext`, `actionurl`)
+VALUES ('+12262429755', 'Please give me a second to see if I understood everything fully.', '/voice/guests');
+
+INSERT INTO `voicebot`.`prompts` (`phone`, `ptext`, `actionurl`)
+VALUES ('+12262429755', 'OK.', '/voice/processingwait');
+
+INSERT INTO `voicebot`.`prompts` (`phone`, `ptext`, `actionurl`)
+VALUES ('+12262429755', 'OK.  All done.  Thank you for calling.', '/voice/confirmation');
 
 
 create table IF NOT EXISTS polls (

@@ -61,20 +61,30 @@ public class Twilio {
     /** post("/voice/processingwait" */
     public static String handleProcessingWait(Request request) {
     	String currentURL = processingWaitAction;
-    	String nextURL = confirmationAction;
 		RecordingStatusCallback params = extractCallbackParameters(request);
         logger.info("handling: " + currentURL + ": " + params.toString());
-		String prompt = Sql2oModel.getInstance().getPrompt(params.to, nextURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
+		String prompt = Sql2oModel.getInstance().getPrompt(params.to, currentURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
 		Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
-		//Redirect redirect = new Redirect.Builder().url(nextURL).build();
-        VoiceResponse response = new VoiceResponse.Builder().say(say)./*redirect(redirect).record(record).*/build();
+		Redirect redirect = new Redirect.Builder().url(confirmationAction).build();
+        VoiceResponse response = new VoiceResponse.Builder().say(say).redirect(redirect)./*record(record).*/build();
 		return toXML(response);
 	}
+    
+    /** post("/voice/confirmation" */
+    public static String handleConfirmation(Request request) {
+    	String currentURL = confirmationAction;
+    	RecordingStatusCallback params = extractCallbackParameters(request);
+    	logger.info("handling: " + currentURL + ": " + params.toString());
+    	String prompt = Sql2oModel.getInstance().getPrompt(params.to, currentURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
+    	Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
+    	VoiceResponse response = new VoiceResponse.Builder().say(say).build();
+    	return toXML(response);
+    }
 
     private static String genericHandleRecord(Request request, String currentURL, String nextURL) {
 		RecordingStatusCallback params = extractCallbackParameters(request);
         logger.info("handling: " + currentURL + ": " + params.toString());
-		String prompt = Sql2oModel.getInstance().getPrompt(params.to, nextURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
+		String prompt = Sql2oModel.getInstance().getPrompt(params.to, currentURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
 		Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
         Record record = new Record.Builder().action(base + nextURL).playBeep(false).timeout(timeoutSeconds).build();
         VoiceResponse response = new VoiceResponse.Builder().say(say).record(record).build();
