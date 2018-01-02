@@ -30,13 +30,15 @@ public class Sql2oModel {
 
     public long createRecording(Recording r) {
         try (Connection con = sql2o.open()) {
-        	Connection executeUpdate = con.createQuery("insert into recordings(filename, url, status, conversation, phone, parsedtext, misc) "
-            		+ "values (:filename, :url, :status, :conversation, :phone, :parsedtext, :misc)")
+        	Connection executeUpdate = con.createQuery("insert into recordings(filename, url, status, conversation, phone, phonecalled, urlcalled, parsedtext, misc) "
+            		+ "values (:filename, :url, :status, :conversation, :phone, :phonecalled, :urlcalled, :parsedtext, :misc)")
                     .addParameter("filename", r.filename)
                     .addParameter("url", r.url)
                     .addParameter("status", r.status)
                     .addParameter("conversation", r.conversation)
                     .addParameter("phone", r.phone)
+                    .addParameter("phonecalled", r.phonecalled)
+                    .addParameter("urlcalled", r.urlcalled)
                     .addParameter("parsedtext", r.parsedtext)
                     .addParameter("misc", r.misc)
                     .executeUpdate();
@@ -48,13 +50,15 @@ public class Sql2oModel {
     public void updateRecording(Recording r) {
         try (Connection con = sql2o.open()) {
         	con.createQuery("update recordings set filename = :filename, url = :url, status = :status, "
-        				+ "conversation = :conversation, phone = :phone, parsedtext = :parsedtext, misc = :misc "
-        				+ "where id = :id")
+        				+ "conversation = :conversation, phone = :phone, phonecalled = :phonecalled, urlcalled = :urlcalled, "
+        				+ "parsedtext = :parsedtext, misc = :misc where id = :id")
                     .addParameter("filename", r.filename)
                     .addParameter("url", r.url)
                     .addParameter("status", r.status)
                     .addParameter("conversation", r.conversation)
                     .addParameter("phone", r.phone)
+                    .addParameter("phonecalled", r.phonecalled)
+                    .addParameter("urlcalled", r.urlcalled)
                     .addParameter("parsedtext", r.parsedtext)
                     .addParameter("misc", r.misc)
                     .addParameter("id", r.id)
