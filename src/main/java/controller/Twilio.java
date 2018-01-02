@@ -1,8 +1,5 @@
 package controller;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-
 import java.util.concurrent.CompletableFuture;
 
 import com.twilio.twiml.Record;
@@ -20,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import spark.Request;
-import spark.Response;
 
 public class Twilio {
 	static int timeoutSeconds = 3;
@@ -44,8 +40,7 @@ public class Twilio {
 		String prompt = Sql2oModel.getInstance().getPrompt(params.to, introAction).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
         Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
         Record record = new Record.Builder().action(base + recordAction).playBeep(false).timeout(timeoutSeconds).build();
-        VoiceResponse response = new VoiceResponse.Builder().say(say).record(record).build();
-		return toXML(response);
+		return toXML(new VoiceResponse.Builder().say(say).record(record).build());
     }
     
     /** post("/voice/record" */
@@ -66,8 +61,7 @@ public class Twilio {
 		String prompt = Sql2oModel.getInstance().getPrompt(params.to, currentURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
 		Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
 		Redirect redirect = new Redirect.Builder().url(confirmationAction).build();
-        VoiceResponse response = new VoiceResponse.Builder().say(say).redirect(redirect)./*record(record).*/build();
-		return toXML(response);
+		return toXML(new VoiceResponse.Builder().say(say).redirect(redirect)./*record(record).*/build());
 	}
     
     /** post("/voice/confirmation" */
@@ -77,8 +71,7 @@ public class Twilio {
     	logger.info("handling: " + currentURL + ": " + params.toString());
     	String prompt = Sql2oModel.getInstance().getPrompt(params.to, currentURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
     	Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
-    	VoiceResponse response = new VoiceResponse.Builder().say(say).build();
-    	return toXML(response);
+    	return toXML(new VoiceResponse.Builder().say(say).build());
     }
 
     private static String genericHandleRecord(Request request, String currentURL, String nextURL) {
@@ -87,7 +80,6 @@ public class Twilio {
 		String prompt = Sql2oModel.getInstance().getPrompt(params.to, currentURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
 		Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
         Record record = new Record.Builder().action(base + nextURL).playBeep(false).timeout(timeoutSeconds).build();
-        VoiceResponse response = new VoiceResponse.Builder().say(say).record(record).build();
         
         if (params.recordingUrl != null && params.recordingUrl.length() > 0 && params.recordingUrl.startsWith("http")) {
         	Transcribe t = new Transcribe(params.recordingUrl , params.from, params.to, currentURL);
@@ -96,7 +88,7 @@ public class Twilio {
         	});
         }
 		
-		return toXML(response);
+		return toXML(new VoiceResponse.Builder().say(say).record(record).build());
 	}
     
 	private static String toXML(VoiceResponse response) {
