@@ -11,22 +11,27 @@ import util.FileDownload;
 public class Transcribe {
     protected String url;
     protected String from;
+    protected String to;
+    protected String action;
+    
     public static Logger logger = LoggerFactory.getLogger(Transcribe.class);
     
     public Transcribe() {
     	super();
     }
 
-    public Transcribe(String u, String f) {
+    public Transcribe(String u, String f, String t, String a) {
     	super();
     	url = u;
     	from = f;
+    	to = t;
+    	action = a;
     }
 
     
     public String transcribeURL() {
 		String filename = FileDownload.generateWAVFilename();
-		Recording r = new Recording(filename, url, from);
+		Recording r = new Recording(filename, url, from, to, action);
 		long recordingID = Sql2oModel.getInstance().createRecording(r);
 		r.id = (int)recordingID;
 		logger.info("recording created: " + recordingID + " --> " + r.toString());

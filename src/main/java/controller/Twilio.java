@@ -23,6 +23,8 @@ import spark.Response;
 public class Twilio {
 	static int timeoutSeconds = 3;
 	static String base = "http://www.resebot.com";
+	
+	private final static String recordAction = "/voice/record";
 
     public static Logger logger = LoggerFactory.getLogger(Twilio.class);
 
@@ -32,7 +34,7 @@ public class Twilio {
      */
     public static String createFirstPrompt() {
         Say say = new Say.Builder("Hello World, please leave a message.").voice(Voice.ALICE).build();
-        Record record = new Record.Builder().action(base + "/voice/record").playBeep(false).timeout(timeoutSeconds).build();
+        Record record = new Record.Builder().action(base + recordAction).playBeep(false).timeout(timeoutSeconds).build();
         VoiceResponse response = new VoiceResponse.Builder().say(say).record(record).build();
 		return toXML(response);
     }
@@ -49,7 +51,7 @@ public class Twilio {
         logger.info(params.toString());
         
         if (params.recordingUrl != null && params.recordingUrl.length() > 0 && params.recordingUrl.startsWith("http")) {
-        	Transcribe t = new Transcribe(params.recordingUrl , params.from);
+        	Transcribe t = new Transcribe(params.recordingUrl , params.from, params.to, recordAction);
         	final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
         		return t.transcribeURL(); //...long running... (from http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html)
         	});

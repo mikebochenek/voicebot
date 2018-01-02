@@ -7,11 +7,13 @@ public class Recording {
 		super();
 	}
 	
-	public Recording(String f, String u, String p) {
+	public Recording(String f, String u, String p, String t, String a) {
 		super();
 		filename = f;
 		url = u;
 		phone = p;
+		phonecalled = t;
+		urlcalled = a;
 	}
 	
 	public int id;
