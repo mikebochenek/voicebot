@@ -43,7 +43,7 @@ public class Sql2oModel {
     public int getMaximumConversationFromRecordings() {
         try (Connection conn = sql2o.open()) {
             return conn.createQuery("select max(conversation) from recordings ")
-            		.executeScalar(Integer.class);
+            		.executeScalar(Long.class).intValue();
         }
     }
     
