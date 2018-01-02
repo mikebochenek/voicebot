@@ -1,5 +1,7 @@
 package model.speech;
 
+import java.util.List;
+
 import model.Recording;
 import model.Sql2oModel;
 
@@ -56,9 +58,22 @@ public class Transcribe {
 		
 		r.status = 1;
 		r.parsedtext = transcript;
+		r.conversation = getConversationID();
 		Sql2oModel.getInstance().updateRecording(r);
 		
 		return transcript;
+    }
+    
+    public int getConversationID() {
+    	int max = 0;
+    	List<Recording> recordings = Sql2oModel.getInstance().getRecordings(from, to);
+    	for (Recording recording : recordings) {
+    		logger.info("getConversationID(): " + recording);
+    		if (recording.conversation > max) { 
+    			max = recording.conversation;
+    		}
+    	}
+    	return max == 0 ? Sql2oModel.getInstance().getMaximumConversationFromRecordings() + 1 : max; //TODO very important - need to double check
     }
     
 }

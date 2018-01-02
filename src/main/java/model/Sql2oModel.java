@@ -28,6 +28,25 @@ public class Sql2oModel {
         }
     }
 
+    /**
+     * get recordings from the last five minutes
+     */
+    public List<Recording> getRecordings(String phoneFrom, String phoneCalled) {
+        try (Connection conn = sql2o.open()) {
+            return conn.createQuery("select * from recordings where createdate > (NOW() - INTERVAL 5 MINUTE) and phone = :phone and phonecalled = :phoneCalled ")
+                    .addParameter("phone", phoneFrom)
+                    .addParameter("phonecalled", phoneCalled)
+            		.executeAndFetch(Recording.class);
+        }
+    }
+
+    public int getMaximumConversationFromRecordings() {
+        try (Connection conn = sql2o.open()) {
+            return conn.createQuery("select max(conversation) from recordings ")
+            		.executeScalar(Integer.class);
+        }
+    }
+    
     public long createRecording(Recording r) {
         try (Connection con = sql2o.open()) {
         	Connection executeUpdate = con.createQuery("insert into recordings(filename, url, status, conversation, phone, phonecalled, urlcalled, parsedtext, misc) "
