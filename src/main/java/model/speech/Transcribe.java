@@ -67,7 +67,7 @@ public class Transcribe {
     	int max = 0;
     	List<Recording> recordings = Sql2oModel.getInstance().getRecordings(from, to);
     	for (Recording recording : recordings) {
-    		logger.info("getConversationID(): " + recording);
+    		logger.debug("getConversationID(): " + recording);
     		if (recording.conversation > max) { 
     			max = recording.conversation;
     		}

@@ -35,7 +35,7 @@ public class Twilio {
     /** get("/voice/intro" */
     public static String createFirstPrompt(Request request) {
 		RecordingStatusCallback params = extractCallbackParameters(request);
-        logger.info("handling: " + introAction + ": " + params.toString());
+        logger.info("=========>> handling: " + introAction + ": " + params.toString());
 		String prompt = Sql2oModel.getInstance().getPrompt(params.to, introAction).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
         Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
         Record record = new Record.Builder().action(base + recordAction).playBeep(false).timeout(timeoutSeconds).build();
