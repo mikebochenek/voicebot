@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import com.twilio.twiml.Record;
@@ -9,6 +10,7 @@ import com.twilio.twiml.Say;
 import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.Say.Voice;
 
+import model.Recording;
 import model.RecordingStatusCallback;
 import model.Sql2oModel;
 import model.speech.Transcribe;
@@ -69,7 +71,9 @@ public class Twilio {
     	String currentURL = confirmationAction;
     	RecordingStatusCallback params = extractCallbackParameters(request);
     	logger.info("handling: " + currentURL + ": " + params.toString());
-    	String prompt = Sql2oModel.getInstance().getPrompt(params.to, currentURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
+    	String confirmationText = extractConfirmationText(params);
+    	logger.info("confirmationText : " + confirmationText); 
+    	String prompt = confirmationText + Sql2oModel.getInstance().getPrompt(params.to, currentURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
     	Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
     	return toXML(new VoiceResponse.Builder().say(say).build());
     }
@@ -106,5 +110,19 @@ public class Twilio {
 		return new RecordingStatusCallback(req.queryParams("RecordingSid"), req.queryParams("RecordingUrl"),
 				req.queryParams("CallSid"), req.queryParams("From"), req.queryParams("To"), req.queryParams("CallStatus"),
 				req.queryParams("ApiVersion"), req.queryParams("Direction"), req.queryParams("forwardedFrom"));
+	}
+	
+	private static String extractConfirmationText(RecordingStatusCallback params) {
+		String val = "";
+		List<Recording> recordings = Sql2oModel.getInstance().getRecordings(params.from, params.to);
+		for (Recording recording : recordings) {
+			if (guestsAction.equals(recording.urlcalled)) {
+				val += recording.parsedtext + ". ";
+			}
+			if (recordAction.equals(recording.urlcalled)) {
+				val += recording.parsedtext + ". ";
+			}
+		}
+		return val;
 	}
 }
