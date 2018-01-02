@@ -21,6 +21,8 @@ public class Sql2oModel {
         return instance;
     }
     
+    /*** recordings ***/
+    
     public List<Recording> getRecordings() {
         try (Connection conn = sql2o.open()) {
             return conn.createQuery("select * from recordings ")
@@ -28,9 +30,7 @@ public class Sql2oModel {
         }
     }
 
-    /**
-     * get recordings from the last five minutes
-     */
+    /** get recordings from the last five minutes */
     public List<Recording> getRecordings(String phoneFrom, String phoneCalled) {
         try (Connection conn = sql2o.open()) {
             return conn.createQuery("select * from recordings where createdate > (NOW() - INTERVAL 5 MINUTE) and phone = :phone and phonecalled = :phonecalled ")
@@ -85,6 +85,10 @@ public class Sql2oModel {
         }
     }
     
+    
+    /*** users ***/
+    
+    
     public List<User> getUsers() {
         try (Connection conn = sql2o.open()) {
             return conn.createQuery("select * from users ")
@@ -109,7 +113,10 @@ public class Sql2oModel {
         }
     }
     
+    
+    /*** prompts ***/
 
+    
     public List<Prompt> getPrompts() {
         try (Connection conn = sql2o.open()) {
             return conn.createQuery("select * from prompts ")
@@ -125,4 +132,16 @@ public class Sql2oModel {
             		.executeAndFetchFirst(Prompt.class);
         }
     }
+    
+    
+    /*** restaurants ***/
+    
+    
+    public List<Restaurant> getRestaurants() {
+        try (Connection conn = sql2o.open()) {
+            return conn.createQuery("select * from restaurants ")
+            		.executeAndFetch(Restaurant.class);
+        }
+    }
+    
 }
