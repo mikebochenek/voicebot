@@ -1,60 +1,50 @@
 package model;
 import static org.junit.Assert.*;
 
-import java.util.Date;
-import java.util.List;
-
 import model.Sql2oModel;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.sql2o.Sql2o;
 
 public class TestSql2oModel {
 
 	final String testemail = "mh+sample@doodle.com";
-/*	
+
 	private Sql2oModel model;
 	@Before
 	public void setUp() throws Exception {
-        model = DataLoader.initDBConnection(); //TODO bad place to be initing DB connection
+        final String jdbc = System.getProperty("jdbc.url", "jdbc:mysql://localhost:3306/voicebot?verifyServerCertificate=false&useSSL=true");
+        Sql2o sql2o = new Sql2o(jdbc, System.getProperty("jdbc.username", "voiceuser"), System.getProperty("jdbc.password", "tuzysvoice")); 
+        model = new Sql2oModel(sql2o); // http://www.sql2o.org/docs/configuration/
     }
 
 	@Test
-	public void getPollsByInitiator() {
+	public void getRecordings() {
 		long s = System.currentTimeMillis();
-		System.out.println(model.getPollsByInitiator(testemail).size());
+		System.out.println("getRecordings:" + model.getRecordings().size());
+		System.out.println((System.currentTimeMillis() - s) + "ms expired.");
+	}
+	
+	@Test
+	public void getPrompts() {
+		long s = System.currentTimeMillis();
+		System.out.println("getPrompts:" + model.getPrompts().size());
+		assertTrue("should have prompts", model.getPrompts().size() > 0);
 		System.out.println((System.currentTimeMillis() - s) + "ms expired.");
 	}
 
 	@Test
-	public void getPollsByInitiatorSearch() {
-		long i = CreationDateHelper.getTimeLastMonth() * 1000;
-		List<Poll> polls = model.getPollsByInitiatorSearch(testemail, i);
-		for (Poll p : polls) {
-			System.out.println(new Date(p.initiated));
-		}
+	public void getUsers() {
+		long s = System.currentTimeMillis();
+		System.out.println("getUsers:" + model.getUsers().size());
+		System.out.println((System.currentTimeMillis() - s) + "ms expired.");
 	}
 
 	@Test
-	public void getPollsByInitiatorSearchWithKeyword() {
-		long i = CreationDateHelper.getTimeLastYear() * 1000;
-		List<String> polls = model.getPollsByInitiatorSearch(testemail, i, "help");
-		for (String p : polls) {
-			System.out.println(p);
-		}
+	public void getRestaurants() {
+		long s = System.currentTimeMillis();
+		System.out.println("getRestaurants:" + model.getRestaurants().size());
+		System.out.println((System.currentTimeMillis() - s) + "ms expired.");
 	}
-
-	@Test
-	public void getPollsByInitiatorSearchWithoutKeyword() {
-		long i = CreationDateHelper.convertPresetToTime("this_year");
-		List<String> polls = model.getPollsByInitiatorSearch(testemail, i, "");
-		for (String p : polls) {
-			System.out.println(p);
-		}
-		polls = model.getPollsByInitiatorSearch(testemail, i, null);
-		for (String p : polls) {
-			System.out.println(p);
-		}
-	}
-*/	
 }

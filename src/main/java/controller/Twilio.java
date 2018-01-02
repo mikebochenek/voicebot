@@ -32,10 +32,7 @@ public class Twilio {
 
     public static Logger logger = LoggerFactory.getLogger(Twilio.class);
 
-    /**
-     * get("/voice/intro" 
-     * @return
-     */
+    /** get("/voice/intro" */
     public static String createFirstPrompt(Request request) {
 		RecordingStatusCallback params = extractCallbackParameters(request);
         logger.info("handling: " + introAction + ": " + params.toString());
@@ -101,7 +98,7 @@ public class Twilio {
 			logger.info(xml);
 			return xml;
 		} catch (TwiMLException e) {
-			e.printStackTrace();
+			logger.error("toXML failed: ", e);
 			return "";
 		}
 	}
