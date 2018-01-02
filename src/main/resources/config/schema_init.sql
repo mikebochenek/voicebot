@@ -55,6 +55,13 @@ create table IF NOT EXISTS prompts (
 );
 
 
+INSERT INTO `voicebot`.`prompts` (`phone`, `ptext`, `actionurl`)
+VALUES ('+12262429755', 'Hello World, please leave a message.', '/voice/intro');
+
+INSERT INTO `voicebot`.`prompts` (`phone`, `ptext`, `actionurl`)
+VALUES ('+12262429755', 'OK, done recording', '/voice/record');
+
+
 create table IF NOT EXISTS polls (
   uuid INT NOT NULL AUTO_INCREMENT,
   id VARCHAR(32) NULL,
