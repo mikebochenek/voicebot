@@ -27,17 +27,13 @@ public class QuickstartSample {
     public static Logger logger = LoggerFactory.getLogger(QuickstartSample.class);
 	
 	public static void main(String... args) throws Exception {
-		// The path to the audio file to transcribe
-		String fileName = "/tmp/test.wav";
-		process(fileName);
+		process("/tmp/test.wav"); // The path to the audio file to transcribe
 	}
 
 	public static String process(String fileName) throws IOException, Exception {
-		// Instantiates a client
-		SpeechClient speech = SpeechClient.create();
+		SpeechClient speech = SpeechClient.create(); // Instantiates a client
 
-		// Reads the audio file into memory
-		Path path = Paths.get(fileName);
+		Path path = Paths.get(fileName); // Reads the audio file into memory
 		byte[] data = Files.readAllBytes(path);
 		ByteString audioBytes = ByteString.copyFrom(data);
 

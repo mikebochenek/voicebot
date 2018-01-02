@@ -29,7 +29,6 @@ public class Transcribe {
     	to = t;
     	action = a;
     }
-
     
     public String transcribeURL() {
 		String filename = FileDownload.generateWAVFilename();
@@ -75,5 +74,4 @@ public class Transcribe {
     	}
     	return max == 0 ? Sql2oModel.getInstance().getMaximumConversationFromRecordings() + 1 : max; //TODO very important - need to double check
     }
-    
 }

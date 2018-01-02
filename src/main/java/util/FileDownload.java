@@ -34,7 +34,7 @@ public class FileDownload {
 	
 	/**
 	 * create random filename for .wav files
-	 * @return
+	 * @return new filename
 	 */
 	public static String generateWAVFilename() {
 		String path = System.getProperty("data.local.path", "/tmp");
