@@ -46,6 +46,9 @@ public class Application {
 
         get("/", (req, res) -> renderTemplate("velocity/index.vm", new HashMap<>(), req));
         get("/api/recordings", (req, res) -> renderRecordings(req, res));
+        get("/api/users", (req, res) -> renderUsers(req, res));
+        get("/api/prompts", (req, res) -> renderPrompts(req, res));
+        get("/api/restaurants", (req, res) -> renderRestaurants(req, res));
         get("/voice/intro", (req, res) -> renderXML(req, res, Twilio.createFirstPrompt(req)));
         post("/voice/record", (req, res) -> renderXML(req, res, Twilio.handleRecord(req)));
         post(Twilio.guestsAction, (req, res) -> renderXML(req, res, Twilio.handleGuests(req)));
@@ -55,13 +58,26 @@ public class Application {
     
     private static String renderRecordings(Request req, Response res) {
 	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String email = req.queryParams("email");
-        String keyword = req.queryParams("keyword");
-        String preset = req.queryParams("preset");
-        logger.info("preset: " + preset + " email: " + email + " keyword: " + keyword);
-        List<Recording> recordings = Sql2oModel.getInstance().getRecordings(); //getPollsByInitiatorSearch(email, CreationDateHelper.convertPresetToTime(preset), keyword);
         res.type("application/json; charset=utf-8");
-        return gson.toJson(recordings);
+        return gson.toJson(Sql2oModel.getInstance().getRecordings());
+    }
+
+    private static String renderUsers(Request req, Response res) {
+	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        res.type("application/json; charset=utf-8");
+        return gson.toJson(Sql2oModel.getInstance().getUsers());
+    }
+
+    private static String renderPrompts(Request req, Response res) {
+	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        res.type("application/json; charset=utf-8");
+        return gson.toJson(Sql2oModel.getInstance().getPrompts());
+    }
+
+    private static String renderRestaurants(Request req, Response res) {
+	    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        res.type("application/json; charset=utf-8");
+        return gson.toJson(Sql2oModel.getInstance().getRestaurants());
     }
 
     
