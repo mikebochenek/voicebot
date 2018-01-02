@@ -6,6 +6,7 @@ import static spark.Spark.post;
 import java.util.concurrent.CompletableFuture;
 
 import com.twilio.twiml.Record;
+import com.twilio.twiml.Redirect;
 import com.twilio.twiml.VoiceResponse;
 import com.twilio.twiml.Say;
 import com.twilio.twiml.TwiMLException;
@@ -25,13 +26,16 @@ public class Twilio {
 	static int timeoutSeconds = 3;
 	static String base = "http://www.resebot.com";
 	
-	private final static String recordAction = "/voice/record";
-	private final static String introAction = "/voice/intro";
+	public final static String introAction = "/voice/intro";
+	public final static String recordAction = "/voice/record";
+	public final static String guestsAction = "/voice/guests";
+	public final static String processingWaitAction = "/voice/processingwait";
+	public final static String confirmationAction = "/voice/confirmation";
 
     public static Logger logger = LoggerFactory.getLogger(Twilio.class);
 
     /**
-     * get("/voice/intro", (req, res) -> renderXML(req, res, Twilio.createFirstPrompt())); 
+     * get("/voice/intro" 
      * @return
      */
     public static String createFirstPrompt(Request request) {
@@ -44,29 +48,47 @@ public class Twilio {
 		return toXML(response);
     }
     
-    /**
-     * post("/voice/record", (req, res) -> renderXML(req, res, Twilio.handleRecord(req, res))); 
-     * @param request
-     * @param response
-     * @return
-     */
+    /** post("/voice/record" */
     public static String handleRecord(Request request) {
+    	return genericHandleRecord(request, recordAction, guestsAction);
+	}
+
+    /** post("/voice/guests" */
+    public static String handleGuests(Request request) {
+    	return genericHandleRecord(request, guestsAction, processingWaitAction);
+	}
+    
+    /** post("/voice/processingwait" */
+    public static String handleProcessingWait(Request request) {
+    	String currentURL = processingWaitAction;
+    	String nextURL = confirmationAction;
 		RecordingStatusCallback params = extractCallbackParameters(request);
-        logger.info("handling: " + recordAction + ": " + params.toString());
-		String prompt = Sql2oModel.getInstance().getPrompt(params.to, recordAction).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
+        logger.info("handling: " + currentURL + ": " + params.toString());
+		String prompt = Sql2oModel.getInstance().getPrompt(params.to, nextURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
 		Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
+		//Redirect redirect = new Redirect.Builder().url(nextURL).build();
+        VoiceResponse response = new VoiceResponse.Builder().say(say)./*redirect(redirect).record(record).*/build();
+		return toXML(response);
+	}
+
+    private static String genericHandleRecord(Request request, String currentURL, String nextURL) {
+		RecordingStatusCallback params = extractCallbackParameters(request);
+        logger.info("handling: " + currentURL + ": " + params.toString());
+		String prompt = Sql2oModel.getInstance().getPrompt(params.to, nextURL).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
+		Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
+        Record record = new Record.Builder().action(base + nextURL).playBeep(false).timeout(timeoutSeconds).build();
+        VoiceResponse response = new VoiceResponse.Builder().say(say).record(record).build();
         
         if (params.recordingUrl != null && params.recordingUrl.length() > 0 && params.recordingUrl.startsWith("http")) {
-        	Transcribe t = new Transcribe(params.recordingUrl , params.from, params.to, recordAction);
+        	Transcribe t = new Transcribe(params.recordingUrl , params.from, params.to, currentURL);
         	final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
         		return t.transcribeURL(); //...long running... (from http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html)
         	});
         }
 		
-		VoiceResponse vresponse = new VoiceResponse.Builder().say(say).build();
-		return toXML(vresponse);
+		return toXML(response);
 	}
-
+    
 	private static String toXML(VoiceResponse response) {
 		try {
 			String xml = response.toXml();
