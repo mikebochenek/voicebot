@@ -12,6 +12,7 @@ import com.twilio.twiml.TwiMLException;
 import com.twilio.twiml.Say.Voice;
 
 import model.RecordingStatusCallback;
+import model.Sql2oModel;
 import model.speech.Transcribe;
 
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public class Twilio {
 	static String base = "http://www.resebot.com";
 	
 	private final static String recordAction = "/voice/record";
+	private final static String introAction = "/voice/intro";
 
     public static Logger logger = LoggerFactory.getLogger(Twilio.class);
 
@@ -32,8 +34,11 @@ public class Twilio {
      * get("/voice/intro", (req, res) -> renderXML(req, res, Twilio.createFirstPrompt())); 
      * @return
      */
-    public static String createFirstPrompt() {
-        Say say = new Say.Builder("Hello World, please leave a message.").voice(Voice.ALICE).build();
+    public static String createFirstPrompt(Request request) {
+		RecordingStatusCallback params = extractCallbackParameters(request);
+        logger.info("handling: " + introAction + ": " + params.toString());
+		String prompt = Sql2oModel.getInstance().getPrompt(params.to, introAction).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
+        Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
         Record record = new Record.Builder().action(base + recordAction).playBeep(false).timeout(timeoutSeconds).build();
         VoiceResponse response = new VoiceResponse.Builder().say(say).record(record).build();
 		return toXML(response);
@@ -45,10 +50,11 @@ public class Twilio {
      * @param response
      * @return
      */
-    public static String handleRecord(Request request, Response response) {
-		Say say = new Say.Builder("OK, done recording").voice(Voice.ALICE).build();
+    public static String handleRecord(Request request) {
 		RecordingStatusCallback params = extractCallbackParameters(request);
-        logger.info(params.toString());
+        logger.info("handling: " + recordAction + ": " + params.toString());
+		String prompt = Sql2oModel.getInstance().getPrompt(params.to, recordAction).ptext; //TODO maybe check URL and make more robust (what if phone number does not exist?)
+		Say say = new Say.Builder(prompt).voice(Voice.ALICE).build();
         
         if (params.recordingUrl != null && params.recordingUrl.length() > 0 && params.recordingUrl.startsWith("http")) {
         	Transcribe t = new Transcribe(params.recordingUrl , params.from, params.to, recordAction);
