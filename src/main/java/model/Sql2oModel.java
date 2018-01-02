@@ -85,4 +85,21 @@ public class Sql2oModel {
         	return (key instanceof BigInteger ? ((BigInteger) key).longValue() : (Long) key);
         }
     }
+    
+
+    public List<Prompt> getPrompts() {
+        try (Connection conn = sql2o.open()) {
+            return conn.createQuery("select * from prompts ")
+            		.executeAndFetch(Prompt.class);
+        }
+    }
+
+    public Prompt getPrompt(String phone, String actionurl) {
+        try (Connection conn = sql2o.open()) {
+            return conn.createQuery("select * from prompts where phone = :phone and actionurl = :actionurl")
+                    .addParameter("phone", phone)
+                    .addParameter("actionurl", actionurl)
+            		.executeAndFetchFirst(Prompt.class);
+        }
+    }
 }
