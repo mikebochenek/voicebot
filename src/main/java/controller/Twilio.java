@@ -45,13 +45,11 @@ public class Twilio {
      */
     public static String handleRecord(Request request, Response response) {
 		Say say = new Say.Builder("OK, done recording").voice(Voice.ALICE).build();
-        String url = request.queryParams("RecordingUrl");
-        String from = request.queryParams("From");
-        logger.info("url: " + url + "  from: " + from);
-        logger.info(extractCallbackParameters(request).toString());
+		RecordingStatusCallback params = extractCallbackParameters(request);
+        logger.info(params.toString());
         
-        if (url != null && url.length() > 0 && url.startsWith("http")) {
-        	Transcribe t = new Transcribe(url, from);
+        if (params.recordingUrl != null && params.recordingUrl.length() > 0 && params.recordingUrl.startsWith("http")) {
+        	Transcribe t = new Transcribe(params.recordingUrl , params.from);
         	final CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
         		return t.transcribeURL(); //...long running... (from http://www.nurkiewicz.com/2013/05/java-8-definitive-guide-to.html)
         	});

@@ -10,6 +10,7 @@ FLUSH PRIVILEGES;
 /* for testing init, might be useful to all tables: 
    drop table users; 
    drop table recordings;
+   drop table prompts;
    */
 
 create table IF NOT EXISTS users (
