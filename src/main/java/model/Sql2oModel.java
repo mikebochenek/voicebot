@@ -143,5 +143,25 @@ public class Sql2oModel {
             		.executeAndFetch(Restaurant.class);
         }
     }
+
+    public long createRestaurant(Restaurant r) {
+        try (Connection con = sql2o.open()) {
+        	Connection executeUpdate = con.createQuery("insert into restaurants(name, city, address, schedulecron, status, seats, email, phone, website, googleplaces) "
+            		+ "values (:name, :city, :address, :schedulecron, :status, :seats, :email, :phone, :website, :googleplaces)")
+                    .addParameter("name", r.name)
+                    .addParameter("city", r.city)
+                    .addParameter("address", r.address)
+                    .addParameter("schedulecron", r.schedulecron)
+                    .addParameter("status", r.status)
+                    .addParameter("seats", r.seats)
+                    .addParameter("email", r.email)
+                    .addParameter("phone", r.phone)
+                    .addParameter("website", r.website)
+                    .addParameter("googleplaces", r.googleplaces)
+                    .executeUpdate();
+        	Object key = executeUpdate.getKey();
+        	return (key instanceof BigInteger ? ((BigInteger) key).longValue() : (Long) key);
+        }
+    }
     
 }
