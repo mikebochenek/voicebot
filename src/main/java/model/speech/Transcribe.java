@@ -11,7 +11,8 @@ import org.slf4j.Logger;
 import util.FileDownload;
 
 public class Transcribe {
-    protected String url;
+    private static final int WAIT_BEFORE_DOWNLOADING_WAV = 2000; // milliseconds
+	protected String url;
     protected String from;
     protected String to;
     protected String action;
@@ -38,7 +39,7 @@ public class Transcribe {
 		logger.info("recording created: " + recordingID + " --> " + r.toString());
 		
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(WAIT_BEFORE_DOWNLOADING_WAV);
 		} catch (InterruptedException ie) {
 			logger.error("failed to wait for a few seconds", ie);
 			Thread.currentThread().interrupt();
